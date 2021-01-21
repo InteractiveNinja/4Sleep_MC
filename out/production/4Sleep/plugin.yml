@@ -1,5 +1,5 @@
-name: Sleep4All
-version: 1.0.1
+name: 4Sleep
+version: 1.2.0
 main: eu.imninja.sleep.Main
 
 commands:
