@@ -1,0 +1,8 @@
+name: Sleep4All
+version: 1.0.1
+main: eu.imninja.sleep.Main
+
+commands:
+  4sleep:
+    description: Zeigt dir Informationen zum Pluginentwickler an
+    usage: /4sleep

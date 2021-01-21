@@ -1,0 +1,12 @@
+soundAfterSleep: true
+minimalSleep: -1
+
+showTitle: true
+titleTextBig: "Guten Morgen"
+titleTextSmall: "Tag {time}"
+
+showDayCounter: true
+
+textCantSleepAtNight: "Du kannst nur nachts Schlafen"
+textWantsToSleep : "{playername} möchte Schlafen, {missing} zzZZzzzzZ"
+textDoesntSleepMore: "{playername} möchte nicht mehr schlafen, {missing}"
