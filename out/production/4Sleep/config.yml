@@ -1,9 +1,0 @@
-soundAfterSleep: true
-minimalSleep: -1
-showTitle: true
-titleTextBig: "Good Morning"
-titleTextSmall: "Day {time}"
-showDayCounter: true
-textCantSleepAtNight: "You only can sleep at Night time"
-textWantsToSleep : "{playername} wants to sleep, {missing} zzZZzzzzZ"
-textDoesntSleepMore: "{playername} woke up, {missing}"

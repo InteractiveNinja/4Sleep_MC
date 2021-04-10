@@ -2,6 +2,7 @@ package eu.imninja.sleep;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 public class Listener implements org.bukkit.event.Listener {
     private Plugin p;
     private World w;
-    private ArrayList<String> playersSleeping = new ArrayList<String>();
+    private ArrayList<Player> playersSleeping = new ArrayList<Player>();
     private FileConfiguration config;
 
 
@@ -73,8 +74,8 @@ public class Listener implements org.bukkit.event.Listener {
         String playerName = e.getPlayer().getDisplayName();
 
         if (isNight() || isRaining()) {
-            playersSleeping.add(playerName);
-            String message = textWantsToSleep.replace("{playername}", ChatColor.AQUA + e.getPlayer().getDisplayName() + ChatColor.GOLD).replace("{missing}", showMissing());
+            playersSleeping.add(e.getPlayer());
+            String message = textWantsToSleep.replace("{playername}", ChatColor.AQUA + playerName + ChatColor.GOLD).replace("{missing}", showMissing());
             p.getServer().broadcastMessage(message);
             if (isEnough()) wakeUp();
 
@@ -89,20 +90,18 @@ public class Listener implements org.bukkit.event.Listener {
     @EventHandler
     private void onPlayerStopSleep(PlayerBedLeaveEvent e) {
         String playerName = e.getPlayer().getDisplayName();
-        playersSleeping.remove(playerName);
-        if (isNight()) {
-            String message = textDoesntSleepMore.replace("{playername}", ChatColor.AQUA + e.getPlayer().getDisplayName() + ChatColor.GRAY).replace("{missing}", showMissing());
+        playersSleeping.remove(e.getPlayer());
+        if (isNight() || isRaining()) {
+            String message = textDoesntSleepMore.replace("{playername}", ChatColor.AQUA + playerName + ChatColor.GRAY).replace("{missing}", showMissing());
             p.getServer().broadcastMessage(message);
         }
     }
 
     @EventHandler
     private void onPlayerQuits(PlayerQuitEvent e) {
-        playersSleeping.remove(e.getPlayer().getDisplayName());
-        if (playersSleeping.size() < 0) {
-            if (isNight() && isEnough()) {
+        playersSleeping.remove(e.getPlayer());
+        if ((isNight() || isRaining()) && isEnough()) {
                 wakeUp();
-            }
         }
     }
 
@@ -138,20 +137,37 @@ public class Listener implements org.bukkit.event.Listener {
         return sleeping + "/" + online;
     }
 
+    private void resetPlayerSleepingStats() {
+        playersSleeping.forEach(player -> {
+            player.setStatistic(Statistic.TIME_SINCE_REST,0);
+            System.out.println();
+        });
+    }
+
     private void wakeUp() {
+
+        resetPlayerSleepingStats();
+
         playersSleeping.clear();
+
         w.setTime(0L);
         w.setThundering(false);
         w.setStorm(false);
-        p.getServer().getOnlinePlayers().forEach(player -> {
-            sendTitle(player);
-        });
+        p.getServer().getOnlinePlayers().forEach(this::sendTitle);
     }
 
     private void sendTitle(Player p) {
         String smallTitle = (showDayCounter) ? ChatColor.GOLD + titleSmall.replace("{time}", "" + (w.getFullTime() / 24000)) : "";
         String bigTitle = ChatColor.GOLD + titleBig;
-        if (showTitle) p.sendTitle(bigTitle, smallTitle);
+        if (showTitle){
+            if(showDayCounter){
+                p.sendTitle(bigTitle, smallTitle);
+            } else {
+                p.sendTitle(bigTitle,"");
+
+            }
+
+        }
         if (playSoundAfterSleep) p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
     }
 
