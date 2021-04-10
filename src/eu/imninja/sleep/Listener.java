@@ -137,8 +137,8 @@ public class Listener implements org.bukkit.event.Listener {
         return sleeping + "/" + online;
     }
 
-    private void resetPlayerSleepingStats() {
-        playersSleeping.forEach(player -> {
+    private void resetPlayerOnlineStats() {
+        p.getServer().getOnlinePlayers().forEach(player -> {
             player.setStatistic(Statistic.TIME_SINCE_REST,0);
             System.out.println();
         });
@@ -146,7 +146,7 @@ public class Listener implements org.bukkit.event.Listener {
 
     private void wakeUp() {
 
-        resetPlayerSleepingStats();
+        resetPlayerOnlineStats();
 
         playersSleeping.clear();
 
