@@ -80,21 +80,22 @@ public class Listener implements org.bukkit.event.Listener {
             if (isEnough()) wakeUp();
 
         } else {
-
             String message = ChatColor.AQUA + Main.tag + ChatColor.GOLD + textCantSleepAtNight;
             e.getPlayer().sendMessage(message);
+            e.setCancelled(true);
         }
-        e.setCancelled(true);
+
     }
 
     @EventHandler
     private void onPlayerStopSleep(PlayerBedLeaveEvent e) {
         String playerName = e.getPlayer().getDisplayName();
-        playersSleeping.remove(e.getPlayer());
-        if (isNight() || isRaining()) {
-            String message = textDoesntSleepMore.replace("{playername}", ChatColor.AQUA + playerName + ChatColor.GRAY).replace("{missing}", showMissing());
-            p.getServer().broadcastMessage(message);
+        if(playersSleeping.contains(e.getPlayer())) {
+            playersSleeping.remove(e.getPlayer());
+                String message = textDoesntSleepMore.replace("{playername}", ChatColor.AQUA + playerName + ChatColor.GRAY).replace("{missing}", showMissing());
+                p.getServer().broadcastMessage(message);
         }
+
     }
 
     @EventHandler
