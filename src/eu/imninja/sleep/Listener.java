@@ -119,8 +119,12 @@ public class Listener implements org.bukkit.event.Listener {
     }
 
     private boolean isEnough() {
-        int needToSleep = (minimalSleep == -1) ? getPlayersOnline() / 2 : minimalSleep;
+        int needToSleep = playersThatNeedToSleep();
         return (needToSleep <= getPlayersSleeping());
+    }
+
+    private int playersThatNeedToSleep() {
+        return (minimalSleep == -1) ? getPlayersOnline() / 2 : minimalSleep;
     }
 
     private int getPlayersOnline() {
@@ -132,7 +136,7 @@ public class Listener implements org.bukkit.event.Listener {
     }
 
     private String showMissing() {
-        int online = (minimalSleep == -1) ? getPlayersOnline() : minimalSleep;
+        int online = (minimalSleep == -1) ? playersThatNeedToSleep() : minimalSleep;
         int sleeping = getPlayersSleeping();
 
         return sleeping + "/" + online;
