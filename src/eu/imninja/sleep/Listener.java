@@ -145,7 +145,7 @@ public class Listener implements org.bukkit.event.Listener {
     private void resetPlayerOnlineStats() {
         p.getServer().getOnlinePlayers().forEach(player -> {
             player.setStatistic(Statistic.TIME_SINCE_REST,0);
-            System.out.println();
+
         });
     }
 
